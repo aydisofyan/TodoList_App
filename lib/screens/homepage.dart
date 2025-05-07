@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list/constants/color.dart';
+import 'package:todo_list/model/Tugas.dart';
 import 'package:todo_list/widgets/tugas_item.dart';
 
 class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+  Home({Key? key}) : super(key: key);
+
+  final listtugas = Tugas.TugasItem();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: tdBGColor,
       appBar: _buildAppBar(),
-      body: Container(
+      body: 
+      Container(
         padding: const EdgeInsets.symmetric(
           horizontal: 15, 
-          vertical: 15
-          ),
+          vertical: 15),
         child: Column(
           children: [
             searchBox(),
@@ -22,9 +25,7 @@ class Home extends StatelessWidget {
               child: ListView(
                 children: [
                   Container(
-                    margin: EdgeInsets.only(
-                      top: 50, bottom: 20,
-                      ),
+                    margin: EdgeInsets.only(top: 50, bottom: 20),
                     child: Text(
                       'Semua Catatan',
                       style: TextStyle(
@@ -33,10 +34,13 @@ class Home extends StatelessWidget {
                       ),
                     ),
                   ),
-                  TugasItem(),
+
+                  for (Tugas tugas in listtugas) 
+                  TugasItem(tugas: tugas),
+
                 ],
               ),
-              ),
+            ),
           ],
         ),
       ),
@@ -53,11 +57,7 @@ class Home extends StatelessWidget {
       child: TextField(
         decoration: InputDecoration(
           contentPadding: EdgeInsets.zero,
-          prefixIcon: Icon(
-            Icons.search,
-            color: tdBlack,
-            size: 20,
-          ),
+          prefixIcon: Icon(Icons.search, color: tdBlack, size: 20),
           prefixIconConstraints: const BoxConstraints(
             maxHeight: 20,
             minWidth: 25,
@@ -78,13 +78,9 @@ AppBar _buildAppBar() {
     title: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-      
         Icon(Icons.menu, color: Colors.black, size: 30),
         Container(
-          margin: EdgeInsets.only(
-            top: 10,
-            bottom: 10,
-          ),
+          margin: EdgeInsets.only(top: 10, bottom: 10),
           height: 40,
           width: 40,
           child: ClipRRect(
