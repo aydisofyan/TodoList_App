@@ -9,7 +9,7 @@ class TugasItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 20),
+      margin: EdgeInsets.only(bottom: 15),
       child: ListTile(
         onTap: () {
           print('Menekan tombol 1');
@@ -21,6 +21,7 @@ class TugasItem extends StatelessWidget {
         title: Text(
           tugas.tekstugas!,
           style: TextStyle(
+            fontFamily: 'Poppins',
             color: tdBlack,
             fontSize: 16,
             decoration: tugas.isDone? TextDecoration.lineThrough : null,

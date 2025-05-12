@@ -13,6 +13,8 @@ class Tugas {
       Tugas(id: '03', tekstugas: 'Cuci baju'),
       Tugas(id: '04', tekstugas: 'Tugas Mobile '),
       Tugas(id: '05', tekstugas: 'Sholat dzuhur'),
+      Tugas(id: '06', tekstugas: 'Sholat dzuhur'),
+      Tugas(id: '07', tekstugas: 'Sholat dzuhur'),
     ];
   }
 }
