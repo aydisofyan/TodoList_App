@@ -6,7 +6,7 @@ class Tugas {
 
   Tugas({required this.id, required this.tekstugas, this.isDone = false});
 
-  static List<Tugas> TugasItem() {
+  static List<Tugas> tugaTugasItem() {
     return [
       Tugas(id: '01', tekstugas: 'Menyapu Rumah', isDone: true),
       Tugas(id: '02', tekstugas: 'Nyiram Tanaman', isDone: true),

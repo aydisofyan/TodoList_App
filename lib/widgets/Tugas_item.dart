@@ -4,7 +4,14 @@ import 'package:todo_list/model/Tugas.dart';
 
 class TugasItem extends StatelessWidget {
   final Tugas tugas;
-  const TugasItem({super.key, required this.tugas});
+  final onTodoChange;
+  final Function(String) onDeleteItem;
+  const TugasItem({
+    super.key,
+    required this.tugas,
+    required this.onDeleteItem,
+    required this.onTodoChange,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -12,19 +19,23 @@ class TugasItem extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 15),
       child: ListTile(
         onTap: () {
-          print('Menekan tombol 1');
+          // print('Menekan tombol 1');
+          onTodoChange(tugas);
         },
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
         tileColor: Colors.white,
-        leading: Icon(tugas.isDone? Icons.check_box : Icons.check_box_outline_blank, color: tdBlue),
+        leading: Icon(
+          tugas.isDone ? Icons.check_box : Icons.check_box_outline_blank,
+          color: tdBlue,
+        ),
         title: Text(
           tugas.tekstugas!,
           style: TextStyle(
             fontFamily: 'Poppins',
             color: tdBlack,
             fontSize: 16,
-            decoration: tugas.isDone? TextDecoration.lineThrough : null,
+            decoration: tugas.isDone ? TextDecoration.lineThrough : null,
           ),
         ),
         trailing: Container(
@@ -41,7 +52,7 @@ class TugasItem extends StatelessWidget {
             color: Colors.white,
             icon: Icon(Icons.delete),
             onPressed: () {
-              print('Menghapus tombol');
+              onDeleteItem(tugas.id ?? '');
             },
           ),
         ),

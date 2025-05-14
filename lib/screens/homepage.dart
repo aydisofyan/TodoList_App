@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
@@ -13,8 +14,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final listtugas = Tugas.TugasItem();
+  final listtugas = Tugas.tugaTugasItem();
   final _controller15 = AdvancedSwitchController();
+  List<Tugas> _foundTugas = [];
+  final _todoController = TextEditingController();
 
   @override
   void dispose() {
@@ -23,14 +26,21 @@ class _HomeState extends State<Home> {
   }
 
   @override
+  void initState() {
+    _foundTugas = listtugas;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: tdBGColor,
+
       appBar: _buildAppBar(),
       body: Stack(
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
             child: Column(
               children: [
                 searchBox(),
@@ -48,7 +58,7 @@ class _HomeState extends State<Home> {
                         color: Colors.white,
                       ),
                       activeColor: Colors.blueGrey,
-                      inactiveColor: Colors.deepPurple,
+                      inactiveColor: tdBlue,
                       width: 60,
                       controller: _controller15,
                     ),
@@ -68,7 +78,12 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                       ),
-                      for (Tugas tugas in listtugas) TugasItem(tugas: tugas),
+                      for (Tugas tugas in _foundTugas)
+                        TugasItem(
+                          tugas: tugas,
+                          onTodoChange: _handleListGanti,
+                          onDeleteItem: (id) => _handleListHapus(id),
+                        ),
                     ],
                   ),
                 ),
@@ -81,15 +96,8 @@ class _HomeState extends State<Home> {
               children: [
                 Expanded(
                   child: Container(
-                    margin: const EdgeInsets.only(
-                      bottom: 20,
-                      right: 20,
-                      left: 20,
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 5,
-                    ),
+                    margin: EdgeInsets.only(bottom: 20, right: 20, left: 20),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       boxShadow: [
@@ -103,21 +111,79 @@ class _HomeState extends State<Home> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: TextField(
+                      controller: _todoController,
                       decoration: const InputDecoration(
                         hintText: 'Silahkan tambahkan list',
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10),
                       ),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(bottom: 20, right: 20),
+                  child: ElevatedButton(
+                    child: Text(
+                      '+',
+                      style: TextStyle(fontSize: 40, color: Colors.white),
+                    ),
+                    onPressed: () {
+                      _addListTugas(_todoController.text);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: tdBlue,
+                      minimumSize: Size(60, 60),
                     ),
                   ),
                 ),
               ],
             ),
-          )
-
+          ),
         ],
       ),
     );
+  }
+
+  void _handleListGanti(Tugas tugas) {
+    setState(() {
+      tugas.isDone = !tugas.isDone;
+    });
+  }
+
+  void _handleListHapus(String id) {
+    setState(() {
+      listtugas.removeWhere((item) => item.id == id);
+    });
+  }
+
+  void _addListTugas(String tugas) {
+    setState(() {
+      listtugas.add(
+        Tugas(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          tekstugas: tugas,
+        ),
+      );
+    });
+    _todoController.clear();
+  }
+
+  void _run(String keyword) {
+    List<Tugas> results = [];
+    if (keyword.isEmpty) {
+      results = listtugas;
+    } else {
+      results =
+          listtugas
+              .where(
+                (item) => item.tekstugas!.toLowerCase().contains(
+                  keyword.toLowerCase(),
+                ),
+              )
+              .toList();
+    }
+    setState(() {
+      _foundTugas = results;
+    });
   }
 
   Widget searchBox() {
@@ -128,6 +194,7 @@ class _HomeState extends State<Home> {
         borderRadius: BorderRadius.circular(15),
       ),
       child: TextField(
+        onChanged: (value) => _run(value),
         decoration: InputDecoration(
           contentPadding: EdgeInsets.zero,
           prefixIcon: Icon(Icons.search, color: tdBlack, size: 20),
